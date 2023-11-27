@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { NextFunction, Request, Response } from 'express';
 import { poolManager } from '../../../postgresManager';
 import { createHash } from 'crypto';
@@ -11,7 +11,7 @@ type User = {
     username: string
 }
 
-interface AuthenticationRequest extends Request { user: User }
+export type AuthenticationRequest = Request & { currentUser: User }
 
 export class Authentication {
 
@@ -68,18 +68,20 @@ export class Authentication {
     public authenticateTokenMiddleware() {
 
         const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
-            
+
             const authHeader = req.headers['authorization']
             const token = authHeader && authHeader.split(' ')[1]
 
             if (token == null) return res.sendStatus(401)
 
-            jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err, user) => {
+            jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err, userToken) => {
                 if (err) {
                     return res.sendStatus(401)
                 }
-                const authReq = req as AuthenticationRequest;
-                
+                const {id, name, email,pwd, username} = userToken as JwtPayload;
+               
+                (req as AuthenticationRequest).currentUser = {id, name, email,pwd, username};
+
                 next();
             });
         }

@@ -6,6 +6,7 @@
         "v1:api": "/api/v1",
         "v1:game:list": "/api/v1/game",
         "v1:game": "/api/v1/game/:gameId",
+        "v1:history": "/api/v1/history/:gameId",
         "v1:documentation": "/doc/v1/",
         "v1:login":"/api/v1/login"
     },
