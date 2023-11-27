@@ -1,11 +1,18 @@
 {
     "server": {
-        "port": 3000        
+        "port": 3000
     },
     "routes": {
         "v1:api": "/api/v1",
         "v1:game:list": "/api/v1/game",
-        "v1:game": "/api/v1/game/:gameId",       
+        "v1:game": "/api/v1/game/:gameId",
         "v1:documentation": "/doc/v1/"
+    },
+    "postgres": {
+        "user": "postgres",
+        "host": "localhost",
+        "database": "postgres",
+        "password": "postgres",
+        "port": 8080
     }
 }
