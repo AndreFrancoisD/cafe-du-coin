@@ -1,20 +1,15 @@
-import { Pool, Client } from 'pg';
+import { Pool } from 'pg';
+import config from '../config/config.json';
 
 class PoolManager {
 
-  public pool: Pool;
+  public pool: Pool;  
 
   constructor() {
-    this.pool = new Pool({
-      user: 'postgres',
-      host: 'localhost',
-      database: 'postgres',
-      password: 'postgres',
-      port: 8080,
-    })
+    this.pool = new Pool(config.postgres)
   }
 
-  query = async (text: string, params?:Array<string|number>) => {
+  query = async (text: string, params?: Array<string | number>) => {
     console.log(text);
     try {
       const result = await this.pool.query(text, params);
@@ -28,3 +23,4 @@ class PoolManager {
 }
 
 export const poolManager = new PoolManager();
+
