@@ -1,10 +1,14 @@
-//import { logger } from './app/router';
-
+import { logger } from './logManager';
+import { config as configEnv } from 'dotenv'
 /**
  * @desc A class to manage events when exiting or when errors occur.
  * @see https://nodejs.org/api/process.html#process_process_events
  */
 export default class ProcessManager {
+
+    static setEnvironmentVariables(): void {
+        configEnv({ path: __dirname + '/../../../.env' });
+    }
 
     /**
      * @description Binds all useful event on the current NodeJS process.
@@ -20,16 +24,16 @@ export default class ProcessManager {
      */
     static eventInitialization(): void {
 
-        process.on('unhandledRejection', (error: string|Error) => {
-           // logger.error(error).then(process.exit(1)).catch(e => console.log(e));
+        process.on('unhandledRejection', (error: string | JSON) => {
+            logger.error(error).then(process.exit(1)).catch(e => console.log(e));
         });
 
-        process.on('uncaughtException', (error: string|Error) => {
-            //logger.error(error).then(process.exit(1)).catch(e => console.log(e));
+        process.on('uncaughtException', (error: string | Error) => {
+            logger.error(error).then(process.exit(1)).catch(e => console.log(e));
         });
 
-        process.on('warning', (error: string|Error) => {
-            //logger.warning(error).catch(e => console.log(e));
+        process.on('warning', (error: string | Error) => {
+            logger.warning(error).catch(e => console.log(e));
         });
 
     }

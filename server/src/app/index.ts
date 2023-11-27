@@ -1,8 +1,6 @@
 import cors from 'cors';
 import express, { Request, Response, NextFunction } from 'express';
-//import gislogger from 'gis.logger';
-import packagefile from '../../package.json';
-import configfile from './../../config/config.json';
+import {logger} from '../logManager';
 import {router as routerV1} from './v1'
 
 
@@ -14,16 +12,6 @@ export const app = express();
 // For https protocol
 app.enable('trust proxy');
 
-/**
- * Configuration file for GRAYLOG, SERVER, etc.
- */
-export const config = configfile;
-export const version = packagefile.version;
-
-/**
- * New singleton logger.
- */
-//export const logger = new gislogger(config.logs);
 
 /**
  * ADD CORS MANAGEMENT (CROSS-DOMAIN)
@@ -40,9 +28,9 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
         return next(error);
     }
 
-    //logger.error(error.stack ? error.stack : JSON.stringify(error));
+    logger.error(error);
 
-    res.status((error as any).status ?? 500).json({ error: `JSONError`, detail: error.message ?? JSON.stringify(error) });
+    res.status((error as any).status ?? 500).json({error });
 });
 
 app.use(express.urlencoded({ limit: '50mb' }));

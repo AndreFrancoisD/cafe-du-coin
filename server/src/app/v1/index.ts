@@ -3,6 +3,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import { Games } from './games';
 import configfile from '../../../config/config.json';
 import packagefile from '../../../package.json';
+import { Authentication } from './authentication/authenticationManager';
 
 /**
  * Configuration file for GRAYLOG, SERVER, etc.
@@ -16,17 +17,23 @@ export const router = express.Router();
  */
 router.use(config.routes['v1:documentation'], express.static('doc/v1'));
 
+/**
+ * Authentication
+ */
+const auth = new Authentication();
+
+router.post(config.routes['v1:login'], auth.getTokenMiddleware());
 
 /**
  * API GAMES
  */
 const games = new Games();
 
-router.get(config.routes['v1:game:list'], games.getGameListMiddleware());
+router.get(config.routes['v1:game:list'], auth.authenticateTokenMiddleware(), games.getGameListMiddleware());
 
-router.get(config.routes['v1:game'], games.getGameDetailMiddleware());
+router.get(config.routes['v1:game'], auth.authenticateTokenMiddleware(), games.getGameDetailMiddleware());
 
-router.put(config.routes['v1:game'], games.updateGameMiddleware());
+router.put(config.routes['v1:game'], auth.authenticateTokenMiddleware(), games.updateGameMiddleware());
 
 
 

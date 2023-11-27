@@ -1,9 +1,10 @@
 import { Pool } from 'pg';
 import config from '../config/config.json';
+import { logger } from './logManager';
 
 class PoolManager {
 
-  public pool: Pool;  
+  public pool: Pool;
 
   constructor() {
     this.pool = new Pool(config.postgres)
@@ -15,8 +16,8 @@ class PoolManager {
       const result = await this.pool.query(text, params);
       return result;
     }
-    catch (error) {
-      console.log(error);
+    catch (error: unknown) {
+      logger.error(error);
     }
   }
 
