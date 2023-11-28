@@ -9,13 +9,10 @@ type Game = {
 }
 
 export class GameManager {
-    //https://www.ludum.fr/blog/les-100-meilleurs-jeux-pour-jouer-en-ludotheque-n416#famille
-    //document.querySelectorAll("span.blog_jeulist_info_title").forEach(retour = function(e){console.log(e.innerText);})
-    //document.querySelectorAll("div.blog_jeulist_detail").forEach(retour = function(e){console.log(e.querySelector("p").innerText);})
+    
     public getGameListMiddleware() {
 
-        const getGameList = (req: Request, res: Response, next: NextFunction) => {
-            try {
+        const getGameList = (req: Request, res: Response, next: NextFunction) => {          
                 poolManager.query('SELECT id, title, returned FROM cafeducoin.games ORDER BY title ASC')
                     .then((result) => {
                         if (result == null)
@@ -23,11 +20,8 @@ export class GameManager {
                         res.send(result?.rows);
                     })
                     .catch((error: Error) => {
-                        throw error;
-                    });
-            } catch (error: unknown) {
-                next(error);
-            }
+                        next(error);
+                    });          
         }
 
         return getGameList
@@ -35,8 +29,7 @@ export class GameManager {
 
     public getGameDetailMiddleware() {
 
-        const getGame = (req: Request, res: Response, next: NextFunction) => {
-            try {
+        const getGame = (req: Request, res: Response, next: NextFunction) => {           
                 const gameId = req.params.gameId;
                 poolManager.query('SELECT id, title, returned FROM cafeducoin.games WHERE id=$1', [gameId])
                     .then((result) => {
@@ -45,12 +38,8 @@ export class GameManager {
                         res.send(result?.rows);
                     })
                     .catch((error: Error) => {
-                        throw error;
+                        next(error);
                     });
-            } catch (error: unknown) {
-                next(error);
-            }
-
         }
 
         return getGame
@@ -58,24 +47,40 @@ export class GameManager {
 
     public updateGameMiddleware() {
 
-        const updateGame = (req: Request, res: Response, next: NextFunction) => {
-            try {
+        const updateGame = (req: Request, res: Response, next: NextFunction) => {          
                 const gameId = req.params.gameId;
+                const returned = req.body.returned;
+                const userId = req.body.userId;
+
                 poolManager.query(`UPDATE cafeducoin.games
-                                   SET returned= NOT returned
-                                   WHERE id=$1`, [gameId])
-                    .then((result) => {
-                        if (result == null)
-                            throw new Error('The result of the request is null.');
-                        res.send(result?.rows);
+                                   SET returned = $1
+                                   WHERE id=$2`, [returned, gameId])
+                    .then((result1) => {
+                        if (result1 == null)
+                            throw new Error('The result of the request is null.');  
+                        return result1;                     
+                    })
+                    .then((result2) => {
+                       
+                        const query = JSON.parse(returned.toLowerCase())
+                        ? `UPDATE cafeducoin.history 
+                            SET return_date=$3 
+                            WHERE id_game=$1
+                            AND id_user=$2
+                            AND return_date IS NULL`
+                        : `INSERT INTO cafeducoin.history VALUES (DEFAULT, $1, $2, $3, null)`;
+
+                        return poolManager.query(query, [gameId, userId, new Date().toLocaleDateString('en-US')]);                       
+                        
+                    })
+                    .then((result3) => {
+                        if (result3 == null)
+                            throw new Error('The result of the request is null.');        
+                        res.sendStatus(200);
                     })
                     .catch((error: Error) => {
-                        throw error;
-                    });
-            } catch (error: unknown) {
-                next(error);
-            }
-
+                        next(error);
+                    }); 
         }
 
         return updateGame
