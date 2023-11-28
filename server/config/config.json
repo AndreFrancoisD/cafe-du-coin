@@ -8,7 +8,7 @@
         "v1:game": "/api/v1/game/:gameId",
         "v1:history": "/api/v1/history/:gameId",
         "v1:documentation": "/doc/v1/",
-        "v1:login":"/api/v1/login"
+        "v1:login":"/api/v1/auth/token"
     },
     "postgres": {
         "user": "postgres",
