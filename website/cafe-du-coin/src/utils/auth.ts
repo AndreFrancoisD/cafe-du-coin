@@ -1,10 +1,10 @@
-import {jwtDecode as decode} from 'jwt-decode';
+import { jwtDecode as decode } from 'jwt-decode';
 import axios from 'axios';
 
 const REST_ENDPOINT = 'http://localhost:3000/';
 const AUTH_TOKEN_KEY = 'authToken';
 
-export function loginUser(username, password) {
+export function loginUser(username: string, password: string): Promise<void> {
     return new Promise(async (resolve, reject) => {
         try {
             const res = await axios({
@@ -20,7 +20,7 @@ export function loginUser(username, password) {
             setAuthToken(res.data.accessToken);
             resolve();
         }
-        catch (err) {           
+        catch (err) {
             reject(err);
         }
     })
@@ -30,13 +30,13 @@ export function logoutUser() {
     clearAuthToken()
 }
 
-export function setAuthToken(token) {
+export function setAuthToken(token: string) {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     localStorage.setItem(AUTH_TOKEN_KEY, token);
 }
 
 export function getAuthToken() {
-    return localStorage.getItem(AUTH_TOKEN_KEY)    ;
+    return localStorage.getItem(AUTH_TOKEN_KEY);
 }
 
 export function clearAuthToken() {
@@ -51,27 +51,27 @@ export function isLoggedIn() {
 
 export function getUserInfo() {
     if (isLoggedIn()) {
-        return decode(getAuthToken());
+        return decode(getAuthToken() as string);
     }
 }
 
-function getTokenExpirationDate(encodedToken) {
-    if(encodedToken!='undefined'){
+function getTokenExpirationDate(encodedToken: string) {
+    if (encodedToken != 'undefined') {
         const token = decode(encodedToken);
         if (!token.exp) {
             return null;
         }
-      
+
         const date = new Date(0);
         date.setUTCSeconds(token.exp);
-      
+
         return date;
     }
     return null;
 }
-  
-function isTokenExpired(token) {
-    const expirationDate = getTokenExpirationDate(token);
+
+function isTokenExpired(token: string) {
+    const expirationDate = getTokenExpirationDate(token) as Date;
     return expirationDate < new Date();
 }
 

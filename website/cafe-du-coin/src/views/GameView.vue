@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import Games from '../components/Games.vue'
-import {nextTick} from 'vue'
+import { nextTick, onUpdated } from 'vue'
 
-nextTick(()=>{})
+const toto = () => {
+  console.log('toto');
+}
 </script>
 
-<template>
+<template @gameupdated="toto()">
   <main>
     <Games />
   </main>
