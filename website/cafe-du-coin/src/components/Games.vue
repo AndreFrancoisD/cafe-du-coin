@@ -1,4 +1,5 @@
-<template @gameupdated="update()">
+
+<template>
     <div class="content">
         <div class="column">
             <h1>LISTE DES JEUX</h1>
@@ -11,13 +12,14 @@
             </ul>
         </div>
         <div class="column" id="history">
+
         </div>
     </div>
 </template>
 
 <script  lang="ts">
 
-import axios from 'axios';
+import axios, { toFormData } from 'axios';
 
 import { getAuthToken } from '../utils/auth';
 import { createApp } from 'vue';
@@ -45,24 +47,54 @@ export default {
     },
     methods: {
         async addGames() {
-           
+
+            const token = getAuthToken();
+
+            axios({
+                url: `${REST_ENDPOINT}api/v1/game`,
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+                .then((result) => {
+                    this.games = [];
+                    this.games.push(...result.data);
+                })
+                .catch((error) => {
+                    // If token expired
+                    if (error.response != null && error.response.status == 401) {
+                        this.$router.push('/login')
+                    }
+                    //TODO: handle other kind of errors
+                });
+        },
+
+        async getGame(id: number) {
+
+            return new Promise((resolve, reject) => {
                 const token = getAuthToken();
 
                 axios({
-                    url: `${REST_ENDPOINT}api/v1/game`,
+                    url: `${REST_ENDPOINT}api/v1/game/${id}`,
                     method: 'GET',
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
                     .then((result) => {
-                        this.games.push(...result.data);
+                        if (result.data.length > 0)
+                            resolve(result.data[0]);
+                        else throw new Error('This game does not exist.')
                     })
                     .catch((error) => {
                         // If token expired
                         if (error.response != null && error.response.status == 401) {
                             this.$router.push('/login')
                         }
+                        reject(error);
                         //TODO: handle other kind of errors
-                    });    
+                    });
+
+            })
+
+
         },
 
         async getHistory(game: Game) {
@@ -87,7 +119,7 @@ export default {
         },
 
         openHistoryPanel(game: Game, history: HistoryItem[]) {
-           
+
             const tempDiv = document.createElement('div');
             const target = document.querySelector('#history') as HTMLDivElement
             const instance = createApp(HistoryVue).mount(tempDiv);
@@ -97,24 +129,20 @@ export default {
             instance.game = game;
             //@ts-ignore
             instance.history = history;
-            
+            //@ts-ignore
+            instance.parent = this;
+
             // Remove history of another game if displayed.
             while (target.firstChild) {
                 target.removeChild(target.firstChild);
             }
             target.appendChild(tempDiv);
-        },
-
-        update(){
-            console.log('');
-            this.$forceUpdate();
         }
-
     },
     created() {
         this.addGames();
     },
-    
+
 }
 
 </script>

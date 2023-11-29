@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { RouterView } from 'vue-router'
 import { isLoggedIn } from './utils/auth'
 </script>
 
 <template>
-  
-<RouterView />
-  
+  <RouterView />
 </template>
 
 <script lang="ts">
@@ -19,21 +16,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-</style>

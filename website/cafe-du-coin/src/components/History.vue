@@ -16,6 +16,7 @@
 <script lang="ts">
 import axios from 'axios';
 import { getAuthToken, getUserInfo } from '../utils/auth';
+import Games from './Games.vue';
 
 const REST_ENDPOINT = 'http://localhost:3000/';
 
@@ -40,12 +41,13 @@ type User = {
 }
 
 export default {
-
   name: 'History',
-  data(): { history: HistoryItem[], game: Game | null } {
+  props: ['currentGame'],
+  data(): { history: HistoryItem[], game: Game | null, parent: any } {
     return {
       history: [],
       game: null,
+      parent: null
     };
   },
   methods: {
@@ -71,11 +73,14 @@ export default {
       })
         .then((result) => {
           if (result.status == 200) {
-            console.log(`Game ${game.title} updated`);
-          
-            
-            this.$emit('gameupdated');
-            //this.$forceUpdate();
+            this.parent.addGames().then(() => {
+              this.parent.getGame(this.game?.id)
+                .then((result: Game) => {
+                  this.game = result;
+                  this.parent.getHistory(result);
+                  this.$forceUpdate();
+                });
+            });
           }
         })
         .catch((error) => {
