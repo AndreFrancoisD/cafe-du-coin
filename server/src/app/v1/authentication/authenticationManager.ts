@@ -21,6 +21,7 @@ export class Authentication {
 
         const getToken = (req: Request, res: Response, next: NextFunction) => {
             try {
+                //username = 'John Smith'
                 //password = 'mypassword'
                 const username = req.body.username;
                 const password = createHash('sha256').update(req.body.password).digest('hex');

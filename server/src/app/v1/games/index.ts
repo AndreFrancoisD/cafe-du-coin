@@ -4,8 +4,7 @@ import { poolManager } from '../../../postgresManager';
 type Game = {
     id: number,
     title: string,
-    returnDate: Date,
-    boolean: string
+    returned: boolean   
 }
 
 export class GameManager {
@@ -13,7 +12,7 @@ export class GameManager {
     public getGameListMiddleware() {
 
         const getGameList = (req: Request, res: Response, next: NextFunction) => {          
-                poolManager.query('SELECT id, title, returned FROM cafeducoin.games ORDER BY title ASC')
+                poolManager.query('SELECT id, title, returned FROM cafeducoin.games ORDER BY title ASC LIMIT 20')
                     .then((result) => {
                         if (result == null)
                             throw new Error('The result of the request is null.');
