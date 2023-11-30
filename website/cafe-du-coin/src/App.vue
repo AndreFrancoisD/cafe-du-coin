@@ -10,6 +10,7 @@ import { isLoggedIn } from './utils/auth'
 <script lang="ts">
 export default {
   methods: {
+    // Check if an existing token exists.
     isLoggedIn() {
       return isLoggedIn()
     }

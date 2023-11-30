@@ -105,4 +105,8 @@ export default {
 .nondispo {
   color: red;
 }
+
+.button{
+  padding-left: 10px;
+}
 </style>

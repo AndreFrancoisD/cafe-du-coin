@@ -1,21 +1,23 @@
 <template>
-    <div>
+    <div class="center">
+        <span>CAFE DU COIN</span>
         <div class="input-group">
-            <label>Username</label>
-            <input type="text" v-model="username">
+            <label>Nom utilisateur</label>
+            <input type="text" v-model="username" class="right">
         </div>
 
         <div class="input-group">
-            <label>Password</label>
-            <input type="password" v-model="password">
+            <label>Mot de passe</label>
+            <input type="password" v-model="password" class="right">
         </div>
 
-        <button type="button" v-on:click="login">Login</button>
+        <button type="button" class="button right" v-on:click="login">Connection</button>
+        
     </div>
 </template>
 
 <script lang="ts">
-//https://chrismroberts.com/2019/01/03/authentication-and-protected-routes-in-vuejs/
+
 import { loginUser } from '../utils/auth';
 
 
@@ -42,11 +44,5 @@ export default {
 </script>
 
 <style>
-.input-group {
-    margin: 1rem;
-}
 
-.input-group label {
-    margin-right: 0.5rem;
-}
 </style>

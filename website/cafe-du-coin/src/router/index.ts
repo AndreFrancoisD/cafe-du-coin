@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 import { isLoggedIn } from '../utils/auth'
 
 const router = createRouter({
@@ -28,6 +27,10 @@ const router = createRouter({
   ]
 })
 
+/**
+ * Tests for each route if user is correctly logged.
+ * Sinon redirige vers la page de login.
+ */
 router.beforeEach((to, from, next) => {
   if (to.name == 'login' && isLoggedIn()) {
     next({ path: '/' })

@@ -24,6 +24,7 @@ import axios, { toFormData } from 'axios';
 import { getAuthToken } from '../utils/auth';
 import { createApp } from 'vue';
 import HistoryVue from './History.vue';
+// A mettre dans un fichier de config normalement
 const REST_ENDPOINT = 'http://localhost:3000/';
 
 type Game = {
