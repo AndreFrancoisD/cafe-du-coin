@@ -1,8 +1,14 @@
 import cors from 'cors';
 import express, { Request, Response, NextFunction } from 'express';
-import {logger} from '../logManager';
+import {logger} from './logManager';
 import {router as routerV1} from './v1'
+import ProcessManager from './processManager';
 
+/**
+ * PROCESS ENVIRONMENT VARIABLES
+ * Set environment variables
+ */
+ProcessManager.setEnvironmentVariables();
 
 /**
  * SERVER & APPLICATION
@@ -11,7 +17,6 @@ export const app = express();
 
 // For https protocol
 app.enable('trust proxy');
-
 
 /**
  * ADD CORS MANAGEMENT (CROSS-DOMAIN)
@@ -36,6 +41,7 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
 app.use(express.urlencoded({ limit: '50mb' }));
 
 //-----------------------------GAMES API
+// Add the V1
 app.use(routerV1);
 
 //Error 404

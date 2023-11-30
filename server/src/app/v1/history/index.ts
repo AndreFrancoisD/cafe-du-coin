@@ -1,19 +1,17 @@
 import { NextFunction, Request, Response } from 'express';
-import { poolManager } from '../../../postgresManager';
 import { AuthenticationRequest } from '../authentication/authenticationManager';
+import { poolManager } from '../../postgresManager'
 
-type GameHistory = {
-    id: number,
-    idUser: number,
-    idGame: number,
-    borrowDate: Date,
-    returnDate: Date
-};
 
-type Test = Request & { gameHistory: GameHistory };
-
+/**
+ * @description Manager class for game history requests.
+ */
 export class GameHistoryManager {
 
+    /**
+     * Returns an express middleware used to fetch the history of a defined game.
+     * @returns An Express middleware 
+     */
     public getGameHistorytMiddleware() {
 
         const getGameHistory = (req: Request, res: Response, next: NextFunction) => {

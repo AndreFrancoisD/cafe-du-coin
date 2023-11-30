@@ -1,0 +1,28 @@
+version: "2.23"
+services:
+
+  server_cdc:
+    restart: on-failure
+    build: ./server
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/db
+      NODE_ENV: development
+      PORT: 3000
+      ACCESS_TOKEN_SECRET: 23111974M1
+      REFRESH_TOKEN_SECRET: 09111971F2        
+    ports:
+      - "3000:3000"
+
+  postgres:
+    image: preloaded_db:latest
+    container_name: postgres_cdc   
+    environment:     
+      PG_USER: "postgres"
+      PG_HOST: "postgres"
+      PG_DATABASENAME: "postgres"
+      PG_PASSWORD: "postgres"
+      PG_PORT: 5432
+    ports:
+      - "5432:5432"

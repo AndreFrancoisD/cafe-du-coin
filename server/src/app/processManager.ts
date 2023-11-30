@@ -7,7 +7,7 @@ import { config as configEnv } from 'dotenv'
 export default class ProcessManager {
 
     static setEnvironmentVariables(): void {
-        configEnv({ path: __dirname + '/../../../.env' });
+        configEnv({ path: __dirname + '/../../../../.env' });
     }
 
     /**

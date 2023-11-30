@@ -5,6 +5,11 @@ import configfile from '../../../config/config.json';
 import packagefile from '../../../package.json';
 import { Authentication } from './authentication/authenticationManager';
 import { GameHistoryManager } from './history';
+import { logger } from '../logManager';
+
+/**
+ * This file defines a specific router for the API v1
+ */
 
 /**
  * Configuration file for GRAYLOG, SERVER, etc.
@@ -53,7 +58,7 @@ router.use((error: Error, req: Request, res: Response, next: NextFunction) => {
         return next(error);
     }
 
-    //logger.error(error.stack ? error.stack : JSON.stringify(error));
+    logger.error(error.stack ? error.stack : JSON.stringify(error));
 
     res.status(500).json({ error: error.message ?? JSON.stringify(error) });
 });

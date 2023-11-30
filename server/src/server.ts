@@ -1,6 +1,6 @@
 import { app } from './app/index';
-import { logger } from './logManager';
-import ProcessManager from './processManager';
+import { logger } from './app/logManager';
+import ProcessManager from './app/processManager';
 import configFile from '../config/config.json'
 import packageFile from '../package.json'
 /**
@@ -9,16 +9,10 @@ import packageFile from '../package.json'
  */
 ProcessManager.eventInitialization();
 
-/**
- * PROCESS ENVIRONMENT VARIABLES
- * Set environment variables from .env file.
- */
-ProcessManager.setEnvironmentVariables();
-
 const config = configFile;
 const version = packageFile.version;
 
-app.listen(config.server.port, () => {
+app.listen(config.server.port, '0.0.0.0', () => {
 
   logger.info('Environment ' + process.env.NODE_ENV)
     .catch(e => console.log(e));

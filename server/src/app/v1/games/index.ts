@@ -1,14 +1,20 @@
 import { NextFunction, Request, Response } from 'express';
-import { poolManager } from '../../../postgresManager';
+import { poolManager } from '../../postgresManager' 
 
-type Game = {
-    id: number,
-    title: string,
-    returned: boolean   
-}
 
+/**
+ * @description
+ * Manages Express middleware for games:
+ * - get the game list
+ * - get some game info
+ * - update the availability status of a game
+ */
 export class GameManager {
     
+    /**
+     * Used to get game list
+     * @returns An Express middleware
+     */
     public getGameListMiddleware() {
 
         const getGameList = (req: Request, res: Response, next: NextFunction) => {          
@@ -26,6 +32,10 @@ export class GameManager {
         return getGameList
     }
 
+     /**
+     * Used to get game info
+     * @returns An Express middleware
+     */
     public getGameDetailMiddleware() {
 
         const getGame = (req: Request, res: Response, next: NextFunction) => {           
@@ -44,8 +54,20 @@ export class GameManager {
         return getGame
     }
 
+     /**
+     * Used to update game availability
+     * @returns An Express middleware
+     */
     public updateGameMiddleware() {
 
+        /**
+         * Cette méthode n'est pas complètement terminée: si la deuxième requête 
+         * renvoie une erreur, il faut s'assurer de remettre le flag 'returned' modifié
+         * dans la première requête à son état d'origine.
+         * @param req Express request
+         * @param res Express response
+         * @param next Express next function
+         */
         const updateGame = (req: Request, res: Response, next: NextFunction) => {          
                 const gameId = req.params.gameId;
                 const returned = req.body.returned;

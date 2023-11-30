@@ -1,10 +1,19 @@
 import winston from "winston"
 
-
+/**
+ * @description
+ * Creates a logger to log (obvioulsy!) the errors/infos.
+ * It uses Winston that cn connect to an external lo tool (graylog for example).
+ * In this case it is a simple console logger.
+ * Three levels are defined: error, warning, info. Warning is not used in the application.
+ * A singleton is created to use in the whole application.
+ */
 class LogManager {
 
     private _logger: winston.Logger;
-
+    /**
+     * Create the Winston logger
+     */
     constructor() {
 
         this._logger = winston.createLogger({
@@ -20,6 +29,11 @@ class LogManager {
         });
     }
 
+    /**
+     * Logs an info
+     * @param message message string to log
+     * @returns Promise<void>
+     */
     info(message: string | Error | JSON | unknown) {
         const strMessage = this._stringify(message);
         return new Promise<void>((resolve, reject) => {
@@ -35,6 +49,11 @@ class LogManager {
 
     }
 
+    /**
+     * Logs an error
+     * @param message message string or error to log
+     * @returns Promise<void>
+     */
     error(message: string | Error | JSON | unknown) {
         const strMessage = this._stringify(message);
         return new Promise<void>((resolve, reject) => {
@@ -50,6 +69,11 @@ class LogManager {
 
     }
 
+     /**
+     * Logs a warning
+     * @param message message string or error to log
+     * @returns Promise<void>
+     */
     warning(message: string | Error | JSON | unknown) {
         const strMessage = this._stringify(message);
         return new Promise<void>((resolve, reject) => {
@@ -65,6 +89,7 @@ class LogManager {
 
     }
 
+    // Simple méthode pour l'exempmle mais on perd la stack ici
     private _stringify(message: string | Error | JSON | unknown) {
         if (typeof (message) === 'string')
             return message;
