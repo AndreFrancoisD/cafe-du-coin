@@ -1,8 +1,18 @@
 version: "2.23"
 services:
 
-  server_cdc:
+  web:
+    container_name: site_cdc 
+    build: ./website/cafe-du-coin
+    depends_on:
+      - postgres
+      - server
+    ports:
+      - "8080:80"
+
+  server:
     restart: on-failure
+    container_name: server_cdc 
     build: ./server
     depends_on:
       - postgres
@@ -16,7 +26,7 @@ services:
       - "3000:3000"
 
   postgres:
-    image: preloaded_db:latest
+    build: ./data
     container_name: postgres_cdc   
     environment:     
       PG_USER: "postgres"
