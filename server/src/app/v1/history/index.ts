@@ -15,7 +15,7 @@ export class GameHistoryManager {
     public getGameHistorytMiddleware() {
 
         const getGameHistory = (req: Request, res: Response, next: NextFunction) => {
-
+            // Il faut rajouter des asserts sur les entrées pour éviter les erreurs opérationnelles
             const gameId = req.params.gameId;
             const userId = (req as AuthenticationRequest).currentUser.id;
             poolManager.query(`SELECT hi.id, hi.borrow_date, hi.return_date, ga.title 

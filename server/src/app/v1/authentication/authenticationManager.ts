@@ -38,6 +38,8 @@ export class Authentication {
                 //Pour l'exemple l'utilisateur suivant est créé dans la base
                 //username = 'john smith' (tout en minuscule)
                 //password = 'mypassword'
+
+                // Il faut rajouter des asserts sur les entrées pour éviter les erreurs opérationnelles
                 const username = req.body.username;
                 const password = createHash('sha256').update(req.body.password).digest('hex');
 
